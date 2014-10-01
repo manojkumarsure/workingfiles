@@ -1,0 +1,15 @@
+#!/bin/sh
+
+
+for file in ../../Tests/tmp/*.pg
+do
+    rm -f temp1 temp2
+   echo testing `basename $file`
+   reqout=../../Tests/MiniJava/`basename $file|sed s/".pg"/".java.out"/`
+  java PgInterpreter < $file > temp1
+  diff temp1 $reqout 
+   
+done
+echo
+echo done
+

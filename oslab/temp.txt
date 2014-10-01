@@ -1,0 +1,60 @@
+console.error: 
+  Message: Unix error 13 during operation open on file /home/manoj/.mozilla/firefox/2bpdv9ir.default/sessionstore.js (Permission denied)
+1410798095569	addons.xpi	WARN	Exception running bootstrap method shutdown on webapps-team@lists.launchpad.net: ReferenceError: sss is not defined (resource://gre/modules/addons/XPIProvider.jsm -> file:///usr/share/mozilla/extensions/%7Bec8030f7-c20a-464f-9b0e-13a3a9e97384%7D/webapps-team@lists.launchpad.net/bootstrap.js:72:4) JS Stack trace: shutdown@resource://gre/modules/addons/XPIProvider.jsm -> file:///usr/share/mozilla/extensions/%7Bec8030f7-c20a-464f-9b0e-13a3a9e97384%7D/webapps-team@bootstrap.js:72:5 < XPI_callBootstrapMethod@XPIProvider.jsm:4274:9 < shutdownObserver@XPIProvider.jsm:1979:1 < exports.Utils.yield@utils.js:380:12 < INIParser.prototype.process@filterStorage.js:896:7 < exports.IO.readFromFile/onProgress@io.js:103:15 < exports.IO.readFromFile/<@io.js:212:13 < TaskImpl_run@Task.jsm:298:13 < Handler.prototype.process@Promise-backend.js:863:11 < this.PromiseWalker.walkerLoop@Promise-backend.js:742:7
+*************************
+A coding exception was thrown and uncaught in a Task.
+
+Full message: TypeError: Filter is null
+Full stack: INIParser.prototype.process@resource://gre/modules/addons/XPIProvider.jsm -> jar:file:///home/manoj/.mozilla/firefox/2bpdv9ir.default/extensions/%7Bd10d0bf8-f5b5-c8b4-a8b2-2b9879e08c5d%7D.xpi!/bootstrap.js -> jar:file:///home/manoj/.mozilla/firefox/2bpdv9ir.default/extensions/%7Bd10d0bf8-f5b5-c8b4-a8b2-2b9879e08c5d%7D.xpi!/lib/filterStorage.js:815:9
+exports.IO.readFromFile/onProgress@resource://gre/modules/addons/XPIProvider.jsm -> jar:file:///home/manoj/.mozilla/firefox/2bpdv9ir.default/extensions/%7Bd10d0bf8-f5b5-c8b4-a8b2-2b9879e08c5d%7D.xpi!/bootstrap.js -> jar:file:///home/manoj/.mozilla/firefox/2bpdv9ir.default/extensions/%7Bd10d0bf8-f5b5-c8b4-a8b2-2b9879e08c5d%7D.xpi!/lib/io.js:103:15
+exports.IO.readFromFile/<@resource://gre/modules/addons/XPIProvider.jsm -> jar:file:///home/manoj/.mozilla/firefox/2bpdv9ir.default/extensions/%7Bd10d0bf8-f5b5-c8b4-a8b2-2b9879e08c5d%7D.xpi!/bootstrap.js -> jar:file:///home/manoj/.mozilla/firefox/2bpdv9ir.default/extensions/%7Bd10d0bf8-f5b5-c8b4-a8b2-2b9879e08c5d%7D.xpi!/lib/io.js:212:13
+TaskImpl_run@resource://gre/modules/Task.jsm:298:13
+Handler.prototype.process@resource://gre/modules/Promise.jsm -> resource://gre/modules/Promise-backend.js:863:11
+this.PromiseWalker.walkerLoop@resource://gre/modules/Promise.jsm -> resource://gre/modules/Promise-backend.js:742:7
+
+*************************
+*************************
+A coding exception was thrown in a Promise rejection callback.
+
+Full message: TypeError: Cu is null
+See https://developer.mozilla.org/Mozilla/JavaScript_code_modules/Promise.jsm/Promise
+Full stack: exports.FilterStorage.loadFromDisk/readFile</<@resource://gre/modules/addons/XPIProvider.jsm -> jar:file:///home/manoj/.mozilla/firefox/2bpdv9ir.default/extensions/%7Bd10d0bf8-f5b5-c8b4-a8b2-2b9879e08c5d%7D.xpi!/bootstrap.js -> jar:file:///home/manoj/.mozilla/firefox/2bpdv9ir.default/extensions/%7Bd10d0bf8-f5b5-c8b4-a8b2-2b9879e08c5d%7D.xpi!/lib/filterStorage.js:390:11
+exports.IO.readFromFile/onError@resource://gre/modules/addons/XPIProvider.jsm -> jar:file:///home/manoj/.mozilla/firefox/2bpdv9ir.default/extensions/%7Bd10d0bf8-f5b5-c8b4-a8b2-2b9879e08c5d%7D.xpi!/bootstrap.js -> jar:file:///home/manoj/.mozilla/firefox/2bpdv9ir.default/extensions/%7Bd10d0bf8-f5b5-c8b4-a8b2-2b9879e08c5d%7D.xpi!/lib/io.js:171:9
+Handler.prototype.process@resource://gre/modules/Promise.jsm -> resource://gre/modules/Promise-backend.js:866:9
+this.PromiseWalker.walkerLoop@resource://gre/modules/Promise.jsm -> resource://gre/modules/Promise-backend.js:742:7
+
+*************************
+total 228
+-rw-rw-r-- 1 manoj manoj   1990 Sep 12 18:56 a.c
+-rwxrwxr-x 1 manoj manoj  12742 Sep 15 16:21 a.out
+-rw-r----- 1 manoj manoj  11964 Sep 14 22:05 bash.c
+-rw-rw-r-- 1 manoj manoj   9454 Sep 15 16:16 cs12b028_assignment3.c
+-rw-r----- 1 manoj manoj 128824 Sep  9 16:31 LAB3.pdf
+-rw-rw-r-- 1 manoj manoj   2384 Sep 14 22:59 net.c
+-r----x--- 1 manoj manoj    582 Sep 15 08:30 ne.txt
+-rw-rw-r-- 1 manoj manoj    859 Sep 15 16:19 new.txt
+-rw-rw-r-- 1 manoj manoj  11987 Sep 14 22:39 sh2.c
+-rw-r----- 1 manoj manoj   9454 Sep 15 16:17 sh.c
+-rw-rw-r-- 1 manoj manoj   1066 Sep 14 22:17 shell.c
+-rwxr-x--T 1 manoj manoj    575 Sep 15 16:21 temp2.txt
+-rwxr-x--T 1 manoj manoj   3759 Sep 15 16:21 temp.txt
+console.error: 
+  Message: Unix error 13 during operation open on file /home/manoj/.mozilla/firefox/2bpdv9ir.default/sessionstore.js (Permission denied)
+total 236
+-rw-rw-r-- 1 manoj manoj   1990 Sep 12 18:56 a.c
+-rwxrwxr-x 1 manoj manoj  12730 Sep 18 14:33 a.out
+-rw-r----- 1 manoj manoj  11964 Sep 14 22:05 bash.c
+-rw-rw-r-- 1 manoj manoj  11981 Sep 15 17:06 cs12b028.c
+-rwx-wx--- 1 manoj manoj   2271 Sep 15 16:33 file.txt
+-rw-r----- 1 manoj manoj 128824 Sep  9 16:31 LAB3.pdf
+-rw-rw-r-- 1 manoj manoj   2384 Sep 14 22:59 net.c
+-r----x--- 1 manoj manoj    582 Sep 15 08:30 ne.txt
+-rw-rw-r-- 1 manoj manoj    859 Sep 15 16:19 new.txt
+-rw-rw-r-- 1 manoj manoj  11987 Sep 14 22:39 sh2.c
+-rw-r----- 1 manoj manoj   9454 Sep 15 16:17 sh.c
+-rw-rw-r-- 1 manoj manoj   1066 Sep 14 22:17 shell.c
+-rwxr-x--T 1 manoj manoj   1150 Sep 18 14:33 temp2.txt
+-rwxr-x--T 1 manoj manoj   4615 Sep 18 14:33 temp.txt
+1411050891481	addons.xpi	WARN	Exception running bootstrap method shutdown on webapps-team@lists.launchpad.net: ReferenceError: sss is not defined (resource://gre/modules/addons/XPIProvider.jsm -> file:///usr/share/mozilla/extensions/%7Bec8030f7-c20a-464f-9b0e-13a3a9e97384%7D/webapps-team@lists.launchpad.net/bootstrap.js:72:4) JS Stack trace: shutdown@resource://gre/modules/addons/XPIProvider.jsm -> file:///usr/share/mozilla/extensions/%7Bec8030f7-c20a-464f-9b0e-13a3a9e97384%7D/webapps-team@bootstrap.js:72:5 < XPI_callBootstrapMethod@XPIProvider.jsm:4274:9 < shutdownObserver@XPIProvider.jsm:1979:1
+console.error: 
+  Message: Unix error 13 during operation open on file /home/manoj/.mozilla/firefox/2bpdv9ir.default/sessionstore.js (Permission denied)

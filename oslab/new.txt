@@ -1,0 +1,17 @@
+total 240
+--wx--x--- 1 manoj manoj    684 Sep 15 16:14 abcd
+--wx--x--- 1 manoj manoj    634 Sep 15 16:11 ab.txt
+-rw-rw-r-- 1 manoj manoj   1990 Sep 12 18:56 a.c
+-rwxrwxr-x 1 manoj manoj  12742 Sep 15 16:16 a.out
+-rw-r----- 1 manoj manoj  11964 Sep 14 22:05 bash.c
+-rw-rw-r-- 1 manoj manoj   9454 Sep 15 16:16 cs12b028_assignment3.c
+-rw-r----- 1 manoj manoj 128824 Sep  9 16:31 LAB3.pdf
+-rw-rw-r-- 1 manoj manoj   2384 Sep 14 22:59 net.c
+-r----x--- 1 manoj manoj    582 Sep 15 08:30 ne.txt
+-----wx--- 1 manoj manoj    806 Sep 15 16:17 newc.txt
+-rw-rw-r-- 1 manoj manoj      0 Sep 15 16:18 new.txt
+-rw-rw-r-- 1 manoj manoj  11987 Sep 14 22:39 sh2.c
+-rw-r----- 1 manoj manoj   9454 Sep 15 16:17 sh.c
+-rw-rw-r-- 1 manoj manoj   1066 Sep 14 22:17 shell.c
+-rw-rw-r-- 1 manoj manoj   3455 Sep 15 08:44 temp2.txt
+-rw-rw-r-- 1 manoj manoj   5833 Sep 15 08:49 temp.txt

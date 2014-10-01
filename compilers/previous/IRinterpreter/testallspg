@@ -1,0 +1,15 @@
+#!/bin/sh
+
+
+for file in ../../Tests/SPiglet/*.spg
+do
+    rm -f temp1 temp2
+   echo testing `basename $file`
+   reqout=../../Tests/MiniJava/`basename $file|sed s/".spg"/".java.out"/`
+  java PgInterpreter < $file > temp1
+  diff temp1 $reqout 
+   
+done
+echo
+echo done
+
