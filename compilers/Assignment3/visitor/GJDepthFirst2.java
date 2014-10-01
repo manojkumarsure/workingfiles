@@ -157,6 +157,7 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
     */
    public R visit(Goal n, A argu) {
       R _ret=null;
+     
       n.f0.accept(this, argu);
       n.f1.accept(this, argu);
       n.f2.accept(this, argu);
@@ -184,6 +185,7 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
     */
    public R visit(MainClass n, A argu) {
       R _ret=null;
+      System.out.println("MAIN ");
       n.f0.accept(this, argu);
       n.f1.accept(this, argu);
       n.f2.accept(this, argu);
@@ -201,6 +203,7 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
       n.f14.accept(this, argu);
       n.f15.accept(this, argu);
       n.f16.accept(this, argu);
+      System.out.println("END");
       return _ret;
    }
 
@@ -489,6 +492,7 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
    public R visit(PrintStatement n, A argu) {
       R _ret=null;
       n.f0.accept(this, argu);
+      System.out.println("PRINT ");
       n.f1.accept(this, argu);
       n.f2.accept(this, argu);
       n.f3.accept(this, argu);
