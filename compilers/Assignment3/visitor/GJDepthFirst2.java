@@ -18,6 +18,7 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
    
    int print;
    int label;
+   int varcount;
    HashMap<R,R> symboltable=new HashMap<R,R>();
    public R visit(NodeList n, A argu) {
       R _ret=null;
@@ -482,20 +483,20 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
     */
    public R visit(IfStatement n, A argu) {
       R _ret=null;
-      System.out.print("CJUMP ");
+      System.out.print(" CJUMP ");
       n.f0.accept(this, argu);
       n.f1.accept(this, argu);
       n.f2.accept(this, argu);
-      System.out.println("L"+(label));
+      System.out.println(" L"+(label));
       n.f3.accept(this, argu);
       n.f4.accept(this, argu);
-      System.out.println("JUMP L"+(label+1));
+      System.out.println(" JUMP L"+(label+1));
       n.f5.accept(this, argu);
-      System.out.println("L"+(label));
-      System.out.println("NOOP");
+      System.out.println(" L"+(label));
+      System.out.println(" NOOP");
       n.f6.accept(this, argu);
-      System.out.println("L"+(label+1));
-      System.out.println("NOOP");
+      System.out.println(" L"+(label+1));
+      System.out.println(" NOOP");
       label+=2;
       return _ret;
    }
@@ -514,13 +515,13 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
       System.out.println("L"+label);
       System.out.print("CJUMP ");
       n.f2.accept(this, argu);
-      System.out.println("L"+(label+1));
+      System.out.println(" L"+(label+1));
       n.f3.accept(this, argu);
-      System.out.println("NOOP");
+      System.out.println(" NOOP");
       n.f4.accept(this, argu);
-      System.out.println("JUMP L"+label);
-      System.out.println("L"+(label+1));
-      System.out.println("NOOP");
+      System.out.println(" JUMP L"+label);
+      System.out.println(" L"+(label+1));
+      System.out.println(" NOOP");
       label+=2;
       return _ret;
    }
@@ -567,9 +568,12 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
     */
    public R visit(AndExpression n, A argu) {
       R _ret=null;
+      System.out.println("BEGIN ");
+      System.out.print(" RETURN TIMES ");
       n.f0.accept(this, argu);
       n.f1.accept(this, argu);
       n.f2.accept(this, argu);
+      System.out.print("\nEND");
       return _ret;
    }
 
@@ -637,10 +641,16 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
     */
    public R visit(ArrayLookup n, A argu) {
       R _ret=null;
+      System.out.println("BEGIN ");
+      System.out.println("HLOAD TEMP "+varcount+" PLUS ");
       n.f0.accept(this, argu);
       n.f1.accept(this, argu);
+      System.out.println("  TIMES 4 ");
       n.f2.accept(this, argu);
       n.f3.accept(this, argu);
+      System.out.println(" 4 \nRETURN TEMP "+varcount);
+      System.out.println("\nEND");
+      varcount+=1;
       return _ret;
    }
 
@@ -651,9 +661,14 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
     */
    public R visit(ArrayLength n, A argu) {
       R _ret=null;
+      System.out.println("BEGIN");
+      System.out.println("MOVE TEMP "+varcount );
       n.f0.accept(this, argu);
+      System.out.println(" HLOAD TEMP "+(varcount+1)+" TEMP "+varcount+" 0");
       n.f1.accept(this, argu);
       n.f2.accept(this, argu);
+      System.out.println(" RETURN TEMP "+(varcount+1));
+      System.out.println("END");
       return _ret;
    }
 
