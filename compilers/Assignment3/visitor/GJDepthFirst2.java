@@ -14,6 +14,10 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
    //
    // Auto class visitors--probably don't need to be overridden.
    //
+   
+   
+   int print;
+   HashMap<R,R> symboltable=new HashMap<R,R>();
    public R visit(NodeList n, A argu) {
       R _ret=null;
       int _count=0;
@@ -157,7 +161,8 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
     */
    public R visit(Goal n, A argu) {
       R _ret=null;
-     
+      symboltable=(HashMap<R,R>)argu;
+      argu=null;
       n.f0.accept(this, argu);
       n.f1.accept(this, argu);
       n.f2.accept(this, argu);
@@ -203,7 +208,7 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
       n.f14.accept(this, argu);
       n.f15.accept(this, argu);
       n.f16.accept(this, argu);
-      System.out.println("END");
+      System.out.println("\nEND");
       return _ret;
    }
 
@@ -228,7 +233,8 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
    public R visit(ClassDeclaration n, A argu) {
       R _ret=null;
       n.f0.accept(this, argu);
-      n.f1.accept(this, argu);
+      R a = n.f1.accept(this, argu);
+      argu = (A)(a.toString()+":");
       n.f2.accept(this, argu);
       n.f3.accept(this, argu);
       n.f4.accept(this, argu);
@@ -249,7 +255,8 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
    public R visit(ClassExtendsDeclaration n, A argu) {
       R _ret=null;
       n.f0.accept(this, argu);
-      n.f1.accept(this, argu);
+      R a = n.f1.accept(this, argu);
+      argu = (A)(a.toString()+":");
       n.f2.accept(this, argu);
       n.f3.accept(this, argu);
       n.f4.accept(this, argu);
@@ -290,8 +297,9 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
    public R visit(MethodDeclaration n, A argu) {
       R _ret=null;
       n.f0.accept(this, argu);
-      n.f1.accept(this, argu);
-      n.f2.accept(this, argu);
+      R a = n.f1.accept(this, argu);
+      R b = n.f2.accept(this, argu);
+      argu=(A)(argu.toString()+b.toString()+":");
       n.f3.accept(this, argu);
       n.f4.accept(this, argu);
       n.f5.accept(this, argu);
@@ -537,7 +545,7 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
     */
    public R visit(CompareExpression n, A argu) {
       R _ret=null;
-      System.out.print("LT ")
+      System.out.print("LT ");
       n.f0.accept(this, argu);
       n.f1.accept(this, argu);
       n.f2.accept(this, argu);
@@ -678,6 +686,7 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
    public R visit(IntegerLiteral n, A argu) {
       R _ret=null;
       n.f0.accept(this, argu);
+      System.out.print(n.f0+" ");
       return _ret;
    }
 
@@ -687,6 +696,7 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
    public R visit(TrueLiteral n, A argu) {
       R _ret=null;
       n.f0.accept(this, argu);
+      System.out.print("1 ");
       return _ret;
    }
 
@@ -696,6 +706,7 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
    public R visit(FalseLiteral n, A argu) {
       R _ret=null;
       n.f0.accept(this, argu);
+      System.out.print("0 ");
       return _ret;
    }
 
@@ -705,6 +716,12 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
    public R visit(Identifier n, A argu) {
       R _ret=null;
       n.f0.accept(this, argu);
+	  _ret = (R) n.f0;
+	  if(print==1)
+	  {
+		System.out.print(_ret);
+		return null;
+	  }
       return _ret;
    }
 
