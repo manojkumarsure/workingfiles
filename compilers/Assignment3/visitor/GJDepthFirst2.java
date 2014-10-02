@@ -406,7 +406,9 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
     */
    public R visit(Statement n, A argu) {
       R _ret=null;
+      print=1;
       n.f0.accept(this, argu);
+      print=0;
       return _ret;
    }
 
@@ -431,7 +433,13 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
     */
    public R visit(AssignmentStatement n, A argu) {
       R _ret=null;
-      n.f0.accept(this, argu);
+      print=0;
+      R a = n.f0.accept(this, argu);
+      print=1;
+      if(check((R)(argu.toString()+a.toString())).toString().equals("int"))
+		System.out.println("MOVE "+a);
+	  else
+	    System.out.println("HSTORE "+a);
       n.f1.accept(this, argu);
       n.f2.accept(this, argu);
       n.f3.accept(this, argu);
@@ -449,9 +457,13 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
     */
    public R visit(ArrayAssignmentStatement n, A argu) {
       R _ret=null;
+      System.out.print(" HSTORE ");
       n.f0.accept(this, argu);
       n.f1.accept(this, argu);
+      System.out.print(" PLUS 4 ");
+      System.out.print(" TIMES 4 ");
       n.f2.accept(this, argu);
+      System.out.print(" 4 ");
       n.f3.accept(this, argu);
       n.f4.accept(this, argu);
       n.f5.accept(this, argu);
@@ -743,7 +755,6 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
 	  if(print==1)
 	  {
 		System.out.print(_ret);
-		return null;
 	  }
       return _ret;
    }
