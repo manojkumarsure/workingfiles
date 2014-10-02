@@ -687,11 +687,30 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
     */
    public R visit(MessageSend n, A argu) {
       R _ret=null;
-      n.f0.accept(this, argu);
+      int varcount=globalvarcount;
+      globalvarcount+=3;
+      System.out.println("CALL");
+      System.out.println("BEGIN MOVE TEMP "+(varcount));
+      R a = n.f0.accept(this, argu);
       n.f1.accept(this, argu);
-      n.f2.accept(this, argu);
+      System.out.println("HLOAD TEMP "+(varcount+1)+" TEMP "+varcount +" 0");
+      R x = n.f2.accept(this, argu);
+      int i=0;
+      classtable c=(classtable)symboltable.get((R)a);
+      for(String s : c.meths.toString().split(";"))
+      {
+		if(s.split(":")[0].split(" ")[1].equals(x.toString()))
+			break;
+		else
+			i+=1;
+      }
+      System.out.println("HLOAD TEMP "+(varcount+2)+" TEMP "+(varcount+1)+" "+4*i);
+      System.out.println("RETURN TEMP "+(varcount+2));
+      System.out.println("END");
       n.f3.accept(this, argu);
+      System.out.println("(TEMP "+varcount+" ");
       n.f4.accept(this, argu);
+      System.out.println(")");
       n.f5.accept(this, argu);
       return _ret;
    }
@@ -731,7 +750,7 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
     */
    public R visit(PrimaryExpression n, A argu) {
       R _ret=null;
-      n.f0.accept(this, argu);
+      _ret = n.f0.accept(this, argu);
       return _ret;
    }
 
@@ -741,7 +760,7 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
    public R visit(IntegerLiteral n, A argu) {
       R _ret=null;
       n.f0.accept(this, argu);
-      System.out.print(n.f0+" ");
+      System.out.print(" "+n.f0+" ");
       return _ret;
    }
 
@@ -774,7 +793,7 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
 	  _ret = (R) n.f0;
 	  if(print==1)
 	  {
-		System.out.print(_ret);
+		System.out.print(" "+_ret+" ");
 	  }
       return _ret;
    }
@@ -785,7 +804,8 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
    public R visit(ThisExpression n, A argu) {
       R _ret=null;
       n.f0.accept(this, argu);
-      return _ret;
+      System.out.println("TEMP 0");
+      return (R)argu.toString().split(":")[0];
    }
 
    /**
@@ -836,20 +856,20 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
       n.f2.accept(this, argu);
       n.f3.accept(this, argu);
       print=1;
-      int totalmeths=((classtable)symboltable.get((R)a.toString())).meths.split(";").length-1;
-      int totalvars=((classtable)symboltable.get((R)a.toString())).vars.split(",").length-1
+      int totalmeths=((classtable)symboltable.get((R)a.toString())).meths.toString().split(";").length-1;
+      int totalvars=((classtable)symboltable.get((R)a.toString())).vars.toString().split(",").length-1;
       System.out.println("BEGIN");
       System.out.println("MOVE TEMP "+varcount+ " HALLOCATE "+4*(totalmeths));
       System.out.println("MOVE TEMP "+(varcount+1)+" HALLOCATE " + 4*(totalvars+1));
       int i=0;
       for(i=0;i<totalmeths;i++)
       {
-		System.out.println("HSTORE TEMP "+varcount+" "+4*i+" "+a.toString()+"_"+((classtable)symboltable.get((R)a.toString())).meths.split(";")[i].split(":")[0].split(" ")[1]); )
+		System.out.println("HSTORE TEMP "+varcount+" "+4*i+" "+a.toString()+"_"+((classtable)symboltable.get((R)a.toString())).meths.toString().split(";")[i].split(":")[0].split(" ")[1]);
       }
       System.out.println("HSTORE TEMP "+(varcount+1)+" 0 TEMP "+(varcount));
       System.out.println("RETURN TEMP "+(varcount+1));
       System.out.println("END");
-      return _ret;
+      return a;
    }
 
    /**
