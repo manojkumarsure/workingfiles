@@ -17,8 +17,8 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
    
    
    int print;
-   int label;
-   int varcount;
+   int globallabel;
+   int globalvarcount;
    HashMap<R,R> symboltable=new HashMap<R,R>();
    public R visit(NodeList n, A argu) {
       R _ret=null;
@@ -483,6 +483,8 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
     */
    public R visit(IfStatement n, A argu) {
       R _ret=null;
+      int label=globallabel;
+      globallabel+=2;
       System.out.print(" CJUMP ");
       n.f0.accept(this, argu);
       n.f1.accept(this, argu);
@@ -497,7 +499,6 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
       n.f6.accept(this, argu);
       System.out.println(" L"+(label+1));
       System.out.println(" NOOP");
-      label+=2;
       return _ret;
    }
 
@@ -510,6 +511,8 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
     */
    public R visit(WhileStatement n, A argu) {
       R _ret=null;
+       int label=globallabel;
+      globallabel+=2;
       n.f0.accept(this, argu);
       n.f1.accept(this, argu);
       System.out.println("L"+label);
@@ -522,7 +525,6 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
       System.out.println(" JUMP L"+label);
       System.out.println(" L"+(label+1));
       System.out.println(" NOOP");
-      label+=2;
       return _ret;
    }
 
@@ -641,6 +643,8 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
     */
    public R visit(ArrayLookup n, A argu) {
       R _ret=null;
+      int varcount=globalvarcount;
+      globalvarcount+=1;
       System.out.println("BEGIN ");
       System.out.println("HLOAD TEMP "+varcount+" PLUS ");
       n.f0.accept(this, argu);
@@ -650,7 +654,6 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
       n.f3.accept(this, argu);
       System.out.println(" 4 \nRETURN TEMP "+varcount);
       System.out.println("\nEND");
-      varcount+=1;
       return _ret;
    }
 
@@ -661,6 +664,8 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
     */
    public R visit(ArrayLength n, A argu) {
       R _ret=null;
+      int varcount=globalvarcount;
+      globalvarcount+=2;
       System.out.println("BEGIN");
       System.out.println("MOVE TEMP "+varcount );
       n.f0.accept(this, argu);
@@ -792,11 +797,26 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
     */
    public R visit(ArrayAllocationExpression n, A argu) {
       R _ret=null;
+      int varcount=globalvarcount;
+      globalvarcount+=2;
+      int label=globallabel;
+      globallabel+=2;
+      System.out.println("BEGIN ");
+      System.out.println("MOVE TEMP "+varcount);
       n.f0.accept(this, argu);
       n.f1.accept(this, argu);
       n.f2.accept(this, argu);
       n.f3.accept(this, argu);
       n.f4.accept(this, argu);
+      System.out.println("MOVE TEMP "+(varcount+1)+" HALLOCATE TIMES 4 PLUS TEMP "+varcount +" 1");
+      System.out.println("HSTORE TEMP "+(varcount+1)+" 0 TEMP "+(varcount));
+      System.out.println("L"+(label));
+      System.out.println("CJUMP LT 0 TEMP "+(varcount)+" L"+(label+1));
+      System.out.println("HSTORE TEMP "+(varcount+1)+" TIMES 4 TEMP "+varcount+ " 0");
+      System.out.println("MOVE TEMP "+(varcount)+" MINUS TEMP "+varcount+" 1");
+      System.out.println("JUMP L"+label);
+      System.out.println("L"+(label+1));
+      System.out.println("NOOP");
       return _ret;
    }
 
@@ -808,10 +828,27 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
     */
    public R visit(AllocationExpression n, A argu) {
       R _ret=null;
+      print=0;
+       int varcount=globalvarcount;
+      globalvarcount+=2;
       n.f0.accept(this, argu);
-      n.f1.accept(this, argu);
+      R a = n.f1.accept(this, argu);
       n.f2.accept(this, argu);
       n.f3.accept(this, argu);
+      print=1;
+      int totalmeths=((classtable)symboltable.get((R)a.toString())).meths.split(";").length-1;
+      int totalvars=((classtable)symboltable.get((R)a.toString())).vars.split(",").length-1
+      System.out.println("BEGIN");
+      System.out.println("MOVE TEMP "+varcount+ " HALLOCATE "+4*(totalmeths));
+      System.out.println("MOVE TEMP "+(varcount+1)+" HALLOCATE " + 4*(totalvars+1));
+      int i=0;
+      for(i=0;i<totalmeths;i++)
+      {
+		System.out.println("HSTORE TEMP "+varcount+" "+4*i+" "+a.toString()+"_"+((classtable)symboltable.get((R)a.toString())).meths.split(";")[i].split(":")[0].split(" ")[1]); )
+      }
+      System.out.println("HSTORE TEMP "+(varcount+1)+" 0 TEMP "+(varcount));
+      System.out.println("RETURN TEMP "+(varcount+1));
+      System.out.println("END");
       return _ret;
    }
 
