@@ -17,6 +17,7 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
    
    
    int print;
+   int label;
    HashMap<R,R> symboltable=new HashMap<R,R>();
    public R visit(NodeList n, A argu) {
       R _ret=null;
@@ -299,6 +300,10 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
       n.f0.accept(this, argu);
       R a = n.f1.accept(this, argu);
       R b = n.f2.accept(this, argu);
+      String str=new String();
+      str=argu.toString()+b.toString();
+      System.out.println(str.split(":")[0]+"_"+str.split(":")[1]+"["+(((method)symboltable.get(str)).arglist.toString().split(",").length+1)+"]");
+      System.out.println("BEGIN");
       argu=(A)(argu.toString()+b.toString()+":");
       n.f3.accept(this, argu);
       n.f4.accept(this, argu);
@@ -307,9 +312,11 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
       n.f7.accept(this, argu);
       n.f8.accept(this, argu);
       n.f9.accept(this, argu);
+      System.out.println("\nRETURN ");
       n.f10.accept(this, argu);
       n.f11.accept(this, argu);
       n.f12.accept(this, argu);
+      System.out.println("\nEND");
       return _ret;
    }
 
@@ -463,13 +470,21 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
     */
    public R visit(IfStatement n, A argu) {
       R _ret=null;
+      System.out.print("CJUMP ");
       n.f0.accept(this, argu);
       n.f1.accept(this, argu);
       n.f2.accept(this, argu);
+      System.out.println("L"+(label));
       n.f3.accept(this, argu);
       n.f4.accept(this, argu);
+      System.out.println("JUMP L"+(label+1));
       n.f5.accept(this, argu);
+      System.out.println("L"+(label));
+      System.out.println("NOOP");
       n.f6.accept(this, argu);
+      System.out.println("L"+(label+1));
+      System.out.println("NOOP");
+      label+=2;
       return _ret;
    }
 
@@ -484,9 +499,17 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
       R _ret=null;
       n.f0.accept(this, argu);
       n.f1.accept(this, argu);
+      System.out.println("L"+label);
+      System.out.print("CJUMP ");
       n.f2.accept(this, argu);
+      System.out.println("L"+(label+1));
       n.f3.accept(this, argu);
+      System.out.println("NOOP");
       n.f4.accept(this, argu);
+      System.out.println("JUMP L"+label);
+      System.out.println("L"+(label+1));
+      System.out.println("NOOP");
+      label+=2;
       return _ret;
    }
 
@@ -772,6 +795,7 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
     */
    public R visit(NotExpression n, A argu) {
       R _ret=null;
+      System.out.print("MINUS 1 ");
       n.f0.accept(this, argu);
       n.f1.accept(this, argu);
       return _ret;
