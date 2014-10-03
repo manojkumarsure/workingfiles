@@ -8,7 +8,7 @@ public class P3 {
 		root.accept(new GJDepthFirst2(),(root.accept(new GJDepthFirst(),null)));
       }
       catch (ParseException e) {
-         System.out.println("Type error");
+         System.err.println(e.toString());
       }
    }
 } 

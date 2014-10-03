@@ -357,7 +357,15 @@ public class GJDepthFirst<R,A> implements GJVisitor<R,A> {
         plist = (R) "";
       n.f5.accept(this, argu);
       n.f6.accept(this, argu);
-      n.f7.accept(this, argu);
+      R vars=n.f7.accept(this, argu);
+      String out="";
+      if (vars == null)
+          vars = (R) new LinkedList<R>();
+      List<R> l= (List<R>)vars;
+      ListIterator<R> i = l.listIterator();
+      while(i.hasNext())
+		out+=i.next();
+	  vars=(R)out;
       n.f8.accept(this, argu);
       n.f9.accept(this, argu);
       n.f10.accept(this, argu);
@@ -368,6 +376,7 @@ public class GJDepthFirst<R,A> implements GJVisitor<R,A> {
       x.setType(typename);
       x.setScope((R)(((String)oldArgu) + methname.toString()));
       x.setArglist(plist);
+      x.setVarlist(vars);
       symboltable.put((R)(((String)oldArgu) + methname.toString()),(R)x);
       return (R)(String)(typename+" "+methname+":"+plist+";");
    }
@@ -405,7 +414,7 @@ public class GJDepthFirst<R,A> implements GJVisitor<R,A> {
       x.setName(varname);
       x.setType(typename);
       symboltable.put((R)(((String)argu) +varname.toString()),(R)x);
-      return typename;
+      return varname;
    }
 
    /**

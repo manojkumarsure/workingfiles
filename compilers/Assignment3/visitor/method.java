@@ -7,6 +7,7 @@ public class method<R>
 	public R name;
 	public R rettype;
 	public R arglist;
+	public R varlist;
 	public void setScope(R scopename)
 	{
 		scope=scopename;
@@ -22,6 +23,10 @@ public class method<R>
 	public void setArglist(R arguments)
 	{
 		arglist=arguments;
+	}
+	public void setVarlist(R vars)
+	{
+		varlist=vars;
 	}
 	public method()
 	{

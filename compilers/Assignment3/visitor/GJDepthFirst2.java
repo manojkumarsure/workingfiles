@@ -18,8 +18,9 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
    
    int print;
    int globallabel;
-   int globalvarcount;
+   int globalvarcount=20;
    HashMap<R,R> symboltable=new HashMap<R,R>();
+   HashMap<String,String> temptable=new HashMap<String,String>();
    public R visit(NodeList n, A argu) {
       R _ret=null;
       int _count=0;
@@ -66,95 +67,66 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
    //
    // User-generated visitor methods below
    //
-	public void classAssignable(R x,R y)
-    {
-		if(x.toString().equals(y.toString()))
-			return;
-		classtable a=new classtable();
-		classtable b=new classtable();
-		a=(classtable)symboltable.get((R)x.toString());
-		b=(classtable)symboltable.get((R)y.toString());
-		if((a.classname.toString()).equals(b.classname.toString()))
-			return;
-		R curr = (R)a.parentclass;
-		while(curr!=null)
-		{
-			curr=symboltable.get((R)curr.toString());
-			if((((classtable)curr).classname.toString()).equals(b.classname.toString()))
-				return;
-			curr=(R)((classtable)curr).parentclass;
-		}
-    }
-	public R check(R x)
+	public void AssignTemps()
 	{
-		R _ret=null;
-		String left=new String();
-		left=x.toString();
-		classtable z=new classtable();
-		z=(classtable)symboltable.get((R)(left.split(":")[0]));
-		if(symboltable.get((R)left)==null)
+		for(R key:symboltable.keySet())
 		{
-			if(symboltable.get((R)(left.split(":")[0]+":"+left.split(":")[left.split(":").length-1]))!=null)
-			{
-				left=left.split(":")[0]+":"+left.split(":")[left.split(":").length-1];
-			}
-			else
-			{
-				while(z.parentclass!=null)
+			try{
+				classtable x = (classtable)symboltable.get(key);
+				for(String var : x.vars.toString().split(","))
 				{
-					z=(classtable)symboltable.get((R)z.parentclass.toString());
-					if(symboltable.get(left)==null)
-						left=z.classname.toString()+":"+left.split(":")[left.split(":").length-1];
-					else
-						break;
+					try{
+					temptable.put(x.classname.toString()+":"+var.split(" ")[1],"TEMP "+globalvarcount);
+					globalvarcount+=1;}
+					catch(Exception e2){}
 				}
 			}
+			catch(Exception e1){
+			try{
+				method x = (method)symboltable.get(key);
+				for(String var : x.varlist.toString().split(","))
+				{
+					try{
+					temptable.put(x.scope.toString()+":"+var.split(" ")[1],"TEMP "+globalvarcount);
+					globalvarcount+=1;}
+					catch(Exception e3){}
+				}
+			}
+			catch(Exception e4){}
+			}
 		}
-		variable a=new variable();
-		classtable b = new classtable();
-		try{
-				a=(variable)symboltable.get((R)left);
-				return (R)a.type;
-			}
-			catch(ClassCastException e)
-			{
-				b=(classtable)symboltable.get((R)left);
-				return (R)b.classname;
-			}
 	}
-	R checkfn(R a,String signature)
+	public String getTemp(String scope)
 	{
-		R _ret=null;
-		classtable b = (classtable)symboltable.get((R)a.toString());
-		while(b!=null)
+		String temp=new String();
+		temp=temptable.get(scope);
+		if(temp!=null)
+			return temp;
+		else
 		{
-			String s = b.meths.toString();
-			if(!s.equals(""))
+			try
 			{
-				for(String s1 : s.split(";"))
+				method x = (method)symboltable.get(scope.split(":")[0]+":"+scope.split(":")[1]);
+				int i=1;
+				for(String param:x.arglist.toString().split(","))
 				{
-					if(signature.equals(s1.split(" ")[1]))
-					{
-						return (R)s1.split(" ")[0];
-					}
-					else
-					{
-						if(s1.split(" ")[1].split(":")[0].equals(signature.split(":")[0]))
-						{
-							int length=s1.split(" ")[1].split(":")[1].split(",").length;
-							int i=0;
-							for(String s2 : s1.split(" ")[1].split(":")[1].split(","))
-							{
-								classAssignable((R)signature.split(":")[1].split(",")[i],(R)s2);
-							}
-							return (R)s1.split(" ")[0];
-						}
-					}
+					if(param.equals(scope.split(":")[2]))
+						return "TEMP "+i;
+					i+=1;
 				}
 			}
-			b=(classtable)symboltable.get(b.parentclass);
+			catch(Exception e){}
+			String varname=scope.split(":")[0];
+			String currclass;
+			currclass=scope.split(":")[0];
+			while(true)
+			{
+				temp=temptable.get(currclass+":"+varname);
+				if(temp!=null)
+					return temp;
+				currclass=((classtable)symboltable.get((R)currclass)).parentclass.toString();
+			}
 		}
-		return _ret;
 	}
    /**
     * f0 -> MainClass()
@@ -165,6 +137,7 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
       R _ret=null;
       symboltable=(HashMap<R,R>)argu;
       argu=null;
+      AssignTemps();
       n.f0.accept(this, argu);
       n.f1.accept(this, argu);
       n.f2.accept(this, argu);
@@ -311,10 +284,12 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
       n.f5.accept(this, argu);
       n.f6.accept(this, argu);
       n.f7.accept(this, argu);
+      print=1;
       n.f8.accept(this, argu);
       n.f9.accept(this, argu);
       System.out.println("\nRETURN ");
       n.f10.accept(this, argu);
+      print=0;
       n.f11.accept(this, argu);
       n.f12.accept(this, argu);
       System.out.println("\nEND");
@@ -407,9 +382,7 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
     */
    public R visit(Statement n, A argu) {
       R _ret=null;
-      print=1;
       n.f0.accept(this, argu);
-      print=0;
       return _ret;
    }
 
@@ -434,13 +407,8 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
     */
    public R visit(AssignmentStatement n, A argu) {
       R _ret=null;
-      print=0;
-      R a = n.f0.accept(this, argu);
-      print=1;
-      if(check((R)(argu.toString()+a.toString())).toString().equals("int"))
-		System.out.println("MOVE "+a);
-	  else
-	    System.out.println("HSTORE "+a);
+      System.out.println("MOVE ");
+      n.f0.accept(this, argu);
       n.f1.accept(this, argu);
       n.f2.accept(this, argu);
       n.f3.accept(this, argu);
@@ -696,7 +664,7 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
       System.out.println("HLOAD TEMP "+(varcount+1)+" TEMP "+varcount +" 0");
       R x = n.f2.accept(this, argu);
       int i=0;
-      classtable c=(classtable)symboltable.get((R)a);
+      classtable c=(classtable)symboltable.get((R)a.toString());
       for(String s : c.meths.toString().split(";"))
       {
 		if(s.split(":")[0].split(" ")[1].equals(x.toString()))
@@ -793,7 +761,7 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
 	  _ret = (R) n.f0;
 	  if(print==1)
 	  {
-		System.out.print(" "+_ret+" ");
+		System.out.print(" "+getTemp(argu.toString()+_ret.toString())+" ");
 	  }
       return _ret;
    }
@@ -804,7 +772,7 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
    public R visit(ThisExpression n, A argu) {
       R _ret=null;
       n.f0.accept(this, argu);
-      System.out.println("TEMP 0");
+      System.out.println(" TEMP 0 ");
       return (R)argu.toString().split(":")[0];
    }
 
@@ -848,15 +816,13 @@ public class GJDepthFirst2<R,A> implements GJVisitor<R,A> {
     */
    public R visit(AllocationExpression n, A argu) {
       R _ret=null;
-      print=0;
        int varcount=globalvarcount;
       globalvarcount+=2;
       n.f0.accept(this, argu);
       R a = n.f1.accept(this, argu);
       n.f2.accept(this, argu);
       n.f3.accept(this, argu);
-      print=1;
-      int totalmeths=((classtable)symboltable.get((R)a.toString())).meths.toString().split(";").length-1;
+      int totalmeths=((classtable)symboltable.get((R)a.toString())).meths.toString().split(";").length;
       int totalvars=((classtable)symboltable.get((R)a.toString())).vars.toString().split(",").length-1;
       System.out.println("BEGIN");
       System.out.println("MOVE TEMP "+varcount+ " HALLOCATE "+4*(totalmeths));
