@@ -9,6 +9,9 @@ public class classtable<R>
 	public R vars;
 	public R meths;
 	public R parentclass;
+	public R totalvars;
+	public R totalmeths;
+	public R totalaccmeths;
 	public void setName(R name)
 	{
 		classname=name;

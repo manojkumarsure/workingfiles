@@ -62,6 +62,139 @@ public class GJDepthFirst<R,A> implements GJVisitor<R,A> {
    //
    // User-generated visitor methods below
    //
+   HashMap<classtable,Integer> setvars = new HashMap<classtable,Integer>();
+   public void changevariables()
+   {
+	for(R key:symboltable.keySet())
+	{
+		try{
+		classtable x=(classtable)symboltable.get((R)key.toString());
+		int length=x.vars.toString().split(",").length;
+		String[] s=new String[length];
+		for(int i=0;i<length;i++)
+		{
+			s[i]=x.vars.toString().split(",")[i];
+		}
+		String out=new String();
+		for(int i=0;i<length;i++)
+		{
+			if(s[0].equals(""))
+				break;
+			out+=s[i];
+			out+=",";
+		}
+		x.vars=(R)out;
+		}
+		catch(Exception e){}
+	}
+   }
+   public StringBuffer setvariables(classtable a)
+   {
+		StringBuffer s=new StringBuffer();
+		if(setvars.get(a)!=null)
+		{
+			a.totalvars=(R)a.vars.toString();
+			s.append(a.vars.toString());
+			return s;
+		}
+		if(a.parentclass==null)
+		{
+			setvars.put(a,1);
+			a.totalvars=(R)a.vars.toString();
+			s.append(a.vars.toString());
+			return s;
+		}
+		else
+		{
+			setvars.put(a,1);
+			s.append(setvariables((classtable)symboltable.get((R)a.parentclass.toString())));
+			s.append(a.vars.toString());
+			a.totalvars=(R)s;
+			return s;
+		}
+   }
+   HashMap<classtable,Integer> methhash = new HashMap<classtable,Integer>();
+   public void setmethods()
+   {
+		for(R key:symboltable.keySet())
+		{
+			try{
+			classtable a=(classtable)symboltable.get((R)key.toString());
+			StringBuffer s=new StringBuffer();
+			for(int i=0;i<a.meths.toString().split(";").length;i++)
+			{
+				s.append(a.classname.toString()+":"+a.meths.toString().split(";")[i].split(":")[0].split(" ")[1]);
+				s.append(",");
+			}
+			a.totalaccmeths=(R)s;
+			}
+			catch(Exception e){}
+		}
+   }
+   public String override(String a,String b)
+   {
+		String[] s= new String[a.split(",").length+b.split(",").length];
+		int end=a.split(",").length;
+		int i,j;
+		for(i=0;i<a.split(",").length;i++)
+		{
+			s[i]=a.split(",")[i];
+		}
+		for(i=0;i<b.split(",").length;i++)
+		{
+			for(j=0;j<a.split(",").length;j++)
+			{
+				if(b.split(",")[i].split(":")[1].equals(s[j].split(":")[1]))
+				{
+					s[j]=b.split(",")[i];
+					break;
+				}
+			}
+			if(j==a.split(",").length)
+			{
+				s[end]=b.split(",")[i];
+				end++;
+			}
+		}
+		String outp=new String();
+		for(i=0;i<a.split(",").length+b.split(",").length;i++)
+		{
+			if(s[i]!=null)
+			{
+				outp+=s[i];
+				outp+=",";
+			}
+		}
+		return outp;
+   }
+   public String setaccmethods(classtable a)
+   {
+		if(methhash.get(a)!=null){
+			return a.totalaccmeths.toString();}
+		if(a.parentclass==null)
+		{	methhash.put(a,1);
+			return a.totalaccmeths.toString();}
+		else
+		{
+			methhash.put(a,1);
+			((classtable)(symboltable).get((R)a.parentclass.toString())).totalaccmeths=(R)setaccmethods((classtable)(symboltable).get((R)a.parentclass.toString()));
+			return override(((classtable)(symboltable).get((R)a.parentclass.toString())).totalaccmeths.toString(),a.totalaccmeths.toString());
+		}
+   }
+   public void verify()
+   {
+		changevariables();
+		setmethods();
+		for(R key:symboltable.keySet())
+		{
+			try{
+			classtable x=(classtable)symboltable.get((R)key.toString());
+			setvariables(x);
+			x.totalaccmeths=(R)setaccmethods(x);
+			}
+			catch(Exception e){}
+		}
+   }
    public boolean classAssignable(R x,R y)
     {
 		if(x.toString().equals(y.toString()))
@@ -164,7 +297,8 @@ public class GJDepthFirst<R,A> implements GJVisitor<R,A> {
       n.f0.accept(this, argu);
       n.f1.accept(this, argu);
       n.f2.accept(this, argu);
-      checkoverloading();
+//       checkoverloading();
+		verify();
       return (R)symboltable;
    }
 
@@ -326,7 +460,7 @@ public class GJDepthFirst<R,A> implements GJVisitor<R,A> {
       x.setName(varname);
       x.setType(typename);
       symboltable.put((R)(((String)argu) +varname.toString()),(R)x);
-      return (R)(typename+" "+varname+",");
+      return (R)(argu.toString().split(":")[0]+":"+varname+",");
    }
 
    /**
