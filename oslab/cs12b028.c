@@ -64,20 +64,25 @@ struct backjob* backjoblist;
 
 //structure of the node
 struct backjob{
-  struct cmd *command;
+ char *command;
   struct backjob* next;
 };
 
 //inserting into the linked list
-void insert(struct backjob* b)
+void insert(char* s)
 {
+	struct backjob* b=(struct backjob*)malloc(sizeof(struct backjob));
+	b->command=s;
+	b->next=NULL;
 	if(backjoblist==NULL) //if there are no bg processes, the list would the node
 	{
 		backjoblist=b;
+		printf("first insert\n");
 		return;
 	}
 	else
 	{
+		printf("next insert\n");
 		struct backjob* temp=backjoblist; //otherwise we would go tilll the end, and append the node
 		while(temp->next!=NULL)
 			temp=temp->next;
@@ -108,10 +113,10 @@ void delete(struct backjob* b)
 void print()
 {
 	struct backjob* temp=backjoblist;
+	printf("in\n");
 	while(temp)
 	{
-		printf("in\n");
-		printf("%s\n",(char*)temp->command);
+		printf("%s\n",temp->command);
 		temp=temp->next;
 	}
 }
@@ -120,6 +125,8 @@ void panic(char*);
 struct cmd *parsecmd(char*);
 
 // Execute cmd.  Never returns.
+int bgp=0;
+char* s;
 void
 runcmd(struct cmd *cmd)
 {
@@ -141,8 +148,14 @@ runcmd(struct cmd *cmd)
   //if there is any error ,it will output error message
   case EXEC:
     ecmd = (struct execcmd*)cmd;
+	printf("in exec");
     if(ecmd->argv[0] == 0)
       exit(0);
+	if(bgp==1)
+	{
+		insert(ecmd->argv[0]);
+		s=ecmd->argv[0];
+	}
     execvp(ecmd->argv[0], ecmd->argv);
     printf( "exec %s failed\n", ecmd->argv[0]);
     break;
@@ -200,19 +213,19 @@ runcmd(struct cmd *cmd)
 	//and execute the command without waiting for the child to exit
   case BACK:
     bcmd = (struct backcmd*)cmd;
-	struct backjob* b=(struct backjob*)malloc(sizeof(struct backjob));
-	b->command=bcmd->cmd;
-	b->next=NULL;
-	insert(b);
-    if(fork1() == 0)
-	{
-	  close(1);
-	  close(2);
-	  open("temp.txt",O_RDWR|O_CREAT|O_APPEND);
-	  open("temp2.txt",O_RDWR|O_CREAT|O_APPEND);
-      runcmd(bcmd->cmd);
-	}
-	delete(b);
+	bgp=1;
+	int stdout_copy = dup(1);
+	int stderr_copy = dup(2);
+	close(1);
+	close(2);
+	open("temp.txt",O_RDWR|O_CREAT|O_APPEND);
+	open("temp2.txt",O_RDWR|O_CREAT|O_APPEND);
+	runcmd(bcmd->cmd);
+	close(1);
+	close(2);
+	dup2(stdout_copy,1);
+	dup2(stderr_copy,2);
+	bgp=0;
     break;
   }
   exit(0);

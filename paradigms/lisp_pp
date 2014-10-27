@@ -1,0 +1,26 @@
+Basic
+1.Multiply two numbers 5 and 7.
+2.Set value of a variable to multiplication of 5 and 7.
+3.Set values of multiple variables (a to e) and then evaluate an expression such as a + b * c - d * e.
+4.Define a function that takes two arguments and returns a product of the two.
+5.Define a function that takes a list of elements and returns a sum of all its elements.
+6.Implement Fibonaccino.
+
+
+Medium
+1.Reverse a string without using reverse. 
+2.Print each element of a list without using map. Then use a map.
+3.Check if a number is prime.
+4.Compute a prefix sum over a list of numbers. Prefix sum computes a cumulative sum of integers. For instance, if input is (list 3 4 2 9), the output would be (list 3 7 11 20) where 11=3+4+2.
+5.Use folding to find a minimum element in a list.
+6.Implement map using reduce.
+7.Implement Fibonaccino with tail-recursion. Compare its running time with non-tail-recursive function for different values of n (10, 20, 30, ...).
+
+
+Advanced
+1.Read an input file of integers and create a binary search tree out of it. Pretty print the search tree.
+2.Implement matrix multiplication, where the matrices are read from a file.
+3.Sieve of Eratosthenes.
+4.Maze or a snake game or game of life.
+5.Implement grep for a word (not a regular expression).
+6.Find all files recursively from a starting directory such that the file contains a power of two

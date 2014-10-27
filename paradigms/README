@@ -1,0 +1,35 @@
+*******************************************************************************************************
+ODD14 CS3100 - Paradigms of Programming                                       Programming Assignment 1
+*******************************************************************************************************
+
+           Details
+
+matrix1.txt and matrix2.txt contain the two matrices for testing
+expressions.txt contains the expressions to be evaluated
+answer1.txt and answers2.txt contain the answers for all the expressions for the corresponding matrices 
+
+*******************************************************************************************************
+
+          Evaluation method
+
+matrix_file and the expression_file will be given through the command line. 
+The output should be printed to the screen one after the other with 
+an extra newline in between as given in the sample test case.
+
+*******************************************************************************************************
+
+          Submission instruction
+
+Submit a single tarball/zip file containing a single folder(name: ROLLNO) that contains all 
+the files including a Makefile. 
+Use the following naming convention: ’rollno.tar.gz’ with all capital letters. Ex:CS12B043.tar.gz
+Naming the files is left to your convention. But a Makefile is a must.
+The makefile on being run, should produce the executable file named "evaluate" (without quotes).
+The following commands when run should output the answers to the screen in the 
+same pattern as given in the sample test cases.
+
+$make
+$./evaluate matrix_filename expression_filename
+
+*******************************************************************************************************
+

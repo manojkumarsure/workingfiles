@@ -1,0 +1,10 @@
+(defun area-circle(rad)
+	(write-line "Calculates area of a circle with given radius")
+	(format t "Radius: ~f~%" rad)
+	(format t "Area: ~f" (* 3.141592 rad rad))
+)
+(defun mul2(l)
+	(if (cdr nil) (cons car list 1 cdr l) null
+	)
+)
+(mul2 (list 1 2 3 4))

@@ -1,0 +1,82 @@
+// 	for(int i=0;i<expr.length();i++)
+// 	{
+// 		if(expr[i]!='*' and expr[i]!='+' and expr[i]!='A' and (int)expr[i]<48 and (int)expr[i]>58 and expr[i]!='(' and expr[i]!=')')
+// 		{
+// 			cerr<<"invalid expression1\n";
+// 			exit(-1);
+// 		}
+// 		if(expr[i]=='+')
+// 		{
+// 			if(expr[i-1]!='A' and expr[i-1]!=')')
+// 			{
+// 				cerr<<"invalid expression2\n";
+// 				exit(-1);
+// 			}
+// 			if(expr[i+1]=='(')
+// 			{
+// 				for(int j=0;j<expr.length();j++)
+// 				{
+// 					if(expr[i+j+2]==')')
+// 					{
+// 						res=operatorverify(expr.substr(i+2,i+j+1));
+// 						i=i+j+3;
+// 						break;
+// 					}
+// 				}
+// 				if(res=='N')
+// 				{
+// 					cerr<<"invalid expression4\n";
+// 					exit(-1);
+// 				}
+// 			}
+// 			else{
+// 			if(expr[i+1]!='A' and expr[i+1]!='(')
+// 			{
+// 				cerr<<"invalid expression3\n";
+// 				exit(-1);
+// 			}}
+// 		}
+// 		else{
+// 		if(expr[i]=='*')
+// 		{
+// 			if(expr[i-1]!='A' and expr[i-1]!=')')
+// 			{
+// 				if((int)expr[i-1]<48 or (int)expr[i-1]>58)
+// 				{
+// 					cerr<<"invalid expression5\n";
+// 					exit(-1);
+// 				}
+// 			}
+// 			if(expr[i+1]=='(')
+// 			{
+// 				for(int j=0;j<expr.length();j++)
+// 				{
+// 					if(expr[i+j+2]==')')
+// 					{
+// 						res=operatorverify(expr.substr(i+2,i+j+1));
+// 						i=i+j+3;
+// 						break;
+// 					}
+// 				}
+// 				if(res=='N')
+// 				{
+// 					cerr<<"invalid expression7\n";
+// 					exit(-1);
+// 				}
+// 			}
+// 			else{
+// 			if(expr[i+1]!='A')
+// 			{
+// 				if((int)expr[i+1]<48 or (int)expr[i+1]>58 or expr[i-1]=='A')
+// 				{
+// 					cerr<<"invalid expression6\n";
+// 					exit(-1);
+// 				}
+// 			}}
+// 		}}
+// 	}
+// 	for(int i=0;i<expr.length();i++)
+// 	{
+// 		if(expr[i]=='A')
+// 			return 'M';
+// 	}

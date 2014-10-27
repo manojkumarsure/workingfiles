@@ -28,3 +28,61 @@
 (firefox:4772): GLib-GObject-WARNING **: Attempt to add property GnomeProgram::display after class was initialised
 
 (firefox:4772): GLib-GObject-WARNING **: Attempt to add property GnomeProgram::default-icon after class was initialised
+
+(process:811): GLib-CRITICAL **: g_slice_set_config: assertion 'sys_page_size == 0' failed
+
+(firefox:811): GLib-GObject-WARNING **: Attempt to add property GnomeProgram::sm-connect after class was initialised
+
+(firefox:811): GLib-GObject-WARNING **: Attempt to add property GnomeProgram::show-crash-dialog after class was initialised
+
+(firefox:811): GLib-GObject-WARNING **: Attempt to add property GnomeProgram::display after class was initialised
+
+(firefox:811): GLib-GObject-WARNING **: Attempt to add property GnomeProgram::default-icon after class was initialised
+ATTENTION: default value of option force_s3tc_enable overridden by environment.
+[892:892:1026/220425:ERROR:content_settings_pref_provider.cc(524)] Invalid pattern strings: ,
+[892:892:1026/220425:ERROR:content_settings_pref_provider.cc(406)] Invalid pattern strings: ,
+[892:892:1026/220425:ERROR:desktop_window_tree_host_x11.cc(1547)] Not implemented reached in void views::DesktopWindowTreeHostX11::MapWindow(ui::WindowShowState)
+[892:892:1026/220426:ERROR:content_settings_pref_provider.cc(524)] Invalid pattern strings: ,
+[892:892:1026/220426:ERROR:content_settings_pref_provider.cc(406)] Invalid pattern strings: ,
+[892:972:1026/220427:ERROR:get_updates_processor.cc(240)] PostClientToServerMessage() failed during GetUpdates
+[892:929:1026/220447:ERROR:connection_factory_impl.cc(344)] Failed to connect to MCS endpoint with error -100
+
+(process:1313): GLib-CRITICAL **: g_slice_set_config: assertion 'sys_page_size == 0' failed
+
+(firefox:1313): GLib-GObject-WARNING **: Attempt to add property GnomeProgram::sm-connect after class was initialised
+
+(firefox:1313): GLib-GObject-WARNING **: Attempt to add property GnomeProgram::show-crash-dialog after class was initialised
+
+(firefox:1313): GLib-GObject-WARNING **: Attempt to add property GnomeProgram::display after class was initialised
+
+(firefox:1313): GLib-GObject-WARNING **: Attempt to add property GnomeProgram::default-icon after class was initialised
+
+(process:1503): GLib-CRITICAL **: g_slice_set_config: assertion 'sys_page_size == 0' failed
+
+(firefox:1503): GLib-GObject-WARNING **: Attempt to add property GnomeProgram::sm-connect after class was initialised
+
+(firefox:1503): GLib-GObject-WARNING **: Attempt to add property GnomeProgram::show-crash-dialog after class was initialised
+
+(firefox:1503): GLib-GObject-WARNING **: Attempt to add property GnomeProgram::display after class was initialised
+
+(firefox:1503): GLib-GObject-WARNING **: Attempt to add property GnomeProgram::default-icon after class was initialised
+ATTENTION: default value of option force_s3tc_enable overridden by environment.
+[1559:1559:1026/220809:ERROR:content_settings_pref_provider.cc(524)] Invalid pattern strings: ,
+[1559:1559:1026/220809:ERROR:content_settings_pref_provider.cc(406)] Invalid pattern strings: ,
+[1559:1559:1026/220810:ERROR:desktop_window_tree_host_x11.cc(1547)] Not implemented reached in void views::DesktopWindowTreeHostX11::MapWindow(ui::WindowShowState)
+[1559:1559:1026/220811:ERROR:content_settings_pref_provider.cc(524)] Invalid pattern strings: ,
+[1559:1559:1026/220811:ERROR:content_settings_pref_provider.cc(406)] Invalid pattern strings: ,
+[1559:1672:1026/220812:ERROR:get_updates_processor.cc(240)] PostClientToServerMessage() failed during GetUpdates
+[1559:1598:1026/220831:ERROR:connection_factory_impl.cc(344)] Failed to connect to MCS endpoint with error -100
+[1559:1598:1026/220840:ERROR:channel.cc(316)] RawChannel read error (connection broken)
+
+(process:2358): GLib-CRITICAL **: g_slice_set_config: assertion 'sys_page_size == 0' failed
+
+(firefox:2358): GLib-GObject-WARNING **: Attempt to add property GnomeProgram::sm-connect after class was initialised
+
+(firefox:2358): GLib-GObject-WARNING **: Attempt to add property GnomeProgram::show-crash-dialog after class was initialised
+
+(firefox:2358): GLib-GObject-WARNING **: Attempt to add property GnomeProgram::display after class was initialised
+
+(firefox:2358): GLib-GObject-WARNING **: Attempt to add property GnomeProgram::default-icon after class was initialised
+ATTENTION: default value of option force_s3tc_enable overridden by environment.
