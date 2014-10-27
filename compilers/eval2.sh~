@@ -1,0 +1,30 @@
+javac Assignment4/P4.java
+for i in examples/*.java;
+do
+#echo $i;
+    java -classpath Assignment3 P3 < $i | java -classpath Assignment4 P4 > tempfile;
+    java -jar Interpreter/pgi.jar < tempfile > tmpoutput;
+    cd examples/;
+	j=`echo $i | sed 's/\([^\/]*\/\)\(.*\)/\2/'`;
+	javac $j;
+	class=`echo $j | sed 's/\([^\.]*\)\(.java\)/\1/'`;
+	java  $class> ../tmpoutput2;
+	rm "$class.class";
+	cd ..;
+	diff tmpoutput2 tmpoutput > /dev/null;
+    if [ $? -eq 0 ]
+        then
+        echo "Successful"
+        java -classpath microIR Main < tempfile > tmpoutput;
+        diff tmpoutput parsed;
+        if [ $? -ne 0 ]
+	        then
+    			echo "Failed Parsing ------------- $class -------------------"
+    		fi
+        else
+        echo "Failed --------------------- $class -------------------"
+    fi
+    java -classpath microIR Main < tempfile;
+    rm tmpoutput tmpoutput2 tempfile;
+done
+rm examples/*.class

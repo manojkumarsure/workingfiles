@@ -1,0 +1,816 @@
+%% ================================================================================
+%% This LaTeX file was created by AbiWord.                                         
+%% AbiWord is a free, Open Source word processor.                                  
+%% More information about AbiWord is available at http://www.abisource.com/        
+%% ================================================================================
+
+\documentclass[a4paper,portrait,12pt]{article}
+\usepackage[latin1]{inputenc}
+\usepackage{calc}
+\usepackage{setspace}
+\usepackage{fixltx2e}
+\usepackage{graphicx}
+\usepackage{multicol}
+\usepackage[normalem]{ulem}
+%% Please revise the following command, if your babel
+%% package does not support en-IN
+\usepackage{color}
+\usepackage{hyperref}
+ 
+\begin{document}
+
+\setlength{\oddsidemargin}{0.7875in-1in}
+\setlength{\textwidth}{\paperwidth - 0.7875in-0.7875in}
+
+\begin{center}
+\textbf{\uline{CS3310 -- Operating Systems Lab}}
+\end{center}
+
+\begin{center}
+\textbf{\uline{Assignment Report -- Lab 4}}
+\end{center}
+
+
+\begin{center}
+\textbf{SURE MANOJ KUMAR -- CS12B028}
+\end{center}
+
+
+\textbf{Exercise 1:}
+
+
+
+
+
+(i) -- Allocating an array of Env's of NENV Size
+
+
+
+
+
+envs=(struct Env*)boot\_alloc(NENV*sizeof(struct Env));
+
+
+
+
+
+(ii) -- Mapping to user Read-only at UENVS
+
+
+
+
+
+boot\_map\_region(kern\_pgdir, UENVS, NENV * sizeof(struct Env), PADDR(envs), PTE\_U | PTE\_P); \emph{//}\emph{Read-only permissions  {``}PTE\_U | PTE\_P''}
+
+
+
+
+
+After writing the above code,when I ran the kernel, the function check\_kern\_pgdir()  gave succeeded as result.
+
+
+
+
+
+\textbf{Exercise 2:}
+
+
+
+
+
+(i) -- env\_init()
+
+
+
+
+
+adding the environments to the env\_free\_list linked list in the same order as of \emph{envs }array and marking them as free.
+
+
+
+
+
+int i;
+
+
+env\_free\_list=NULL;
+
+
+for(i = NENV - 1 ; i $>$= 0; i - - )   \emph{//we have to come down from the array to maintain the 					   //	order}
+
+
+\{
+
+
+	envs[i].env\_link=env\_free\_list;   \emph{//Prepending to the linkedlist env\_free\_list}
+
+
+	envs[i].env\_status=ENV\_FREE;   \emph{//marking the environment as free}
+
+
+	env\_free\_list=\&envs[i];                 \emph{//updating the head of the linked list}
+
+
+\}
+
+
+
+
+
+
+
+
+(ii) -- env\_setup\_vm()
+
+
+
+
+
+Allocating a page directory and initialising the kernel portion for the environment
+
+
+
+
+
+	p-$>$pp\_ref++;    //\emph{p is of type struct PageInfo}
+
+
+	
+
+
+	e-$>$env\_pgdir=page2kva(p);     //\emph{allocating a page directory for the environment}
+
+
+	
+
+
+	for(i=PDX(UTOP);i$<$NPDENTRIES;i++)  //\emph{initialising the kernel portion}
+
+
+		e-$>$env\_pgdir[i]=kern\_pgdir[i];
+
+
+	e-$>$env\_pgdir[PDX(UVPT)] = PADDR(e-$>$env\_pgdir) | PTE\_P | PTE\_U; \\				//s\emph{etting the permissions}
+
+
+
+
+(iii) -- Region\_alloc()\\\\Allocating and mapping physical memory for the environment
+
+	\emph{//making va and (va+len) page -- aligned.}
+
+
+	uint32\_t a= ROUNDDOWN((uint32\_t)va,PGSIZE);   \emph{//rounding va down}
+
+
+	uint32\_t b= ROUNDUP((uint32\_t)(va+len),PGSIZE); \emph{// rounding (va+len) up}
+
+
+	
+
+
+	struct PageInfo* p;
+
+
+	uint32\_t i;
+
+
+	
+
+
+	for(i=a;i$<$b;i++)
+
+
+	\{
+
+
+		p = page\_alloc(0); \emph{// allocating a page}
+
+
+		
+
+
+		if (p == NULL)  \emph{ // panicking if the page can not be allocated}
+
+
+			panic({``}region\_alloc failed'');
+
+
+		
+
+
+		page\_insert(e-$>$env\_pgdir,p,(void *)i,PTE\_U|PTE\_W); \\		\emph{//allocating this page for  under e-$>$env\_pgdir with read-only permissions.}
+
+
+	
+
+
+	\}
+
+
+
+
+
+(iv) -- load\_icode()\\\\parsing elf binary and loading it into user environment space of new environment\\
+
+	lcr3(PADDR(e-$>$env\_pgdir));
+
+
+	struct Elf* elfheader = (struct Elf*)binary;
+
+
+	struct Proghdr* ph1,*ph2;
+
+
+	ph1=(struct Proghdr*)(elfheader-$>$e\_phoff+binary);
+
+
+	ph2=ph1+elfheader-$>$e\_phnum;
+
+
+	e-$>$env\_tf.tf\_eip=elfheader-$>$e\_entry;
+
+
+	char* start,*content;
+
+
+	for(;ph1$<$ph2;ph1++)
+
+
+	\{
+
+
+	       region\_alloc(e,(void*)ph1-$>$p\_va,ph1-$>$p\_memsz);
+
+
+	       memmove((void*)ph1-$>$p\_va,(char*)binary+ph1-$>$p\_offset,ph1-$>$p\_filesz);
+
+
+	      memset((void*)(ph1-$>$p\_va+ph1-$>$p\_filesz),0,ph1-$>$p\_memsz - ph1-$>$p\_filesz);
+
+
+	\}
+
+
+	lcr3(PADDR(kern\_pgdir));
+
+
+	region\_alloc(e,(void*)(USTACKTOP-PGSIZE),PGSIZE);
+
+
+
+
+
+(v) -- env\_create()
+
+
+\textcolor[rgb]{0.000,0.000,0.000}{\\allocating an environment an loading the elf binary into it.}
+
+
+
+
+
+\textcolor[rgb]{0.000,0.000,0.000}{	}\textcolor[rgb]{0.000,0.000,0.000}{struct Env* env;}
+
+
+\textcolor[rgb]{0.000,0.000,0.000}{	int a =env\_alloc(\&env, 0);  //}\emph{\textcolor[rgb]{0.000,0.000,0.000}{env\_alloc returns 0 on successfull allocation}}
+
+
+\textcolor[rgb]{0.000,0.000,0.000}{	if (a != 0)}
+
+
+\textcolor[rgb]{0.000,0.000,0.000}{		panic({``}env\_create failed.''); //}\emph{\textcolor[rgb]{0.000,0.000,0.000}{panic if env\_alloc returns non-zero(failed)}}
+
+
+\textcolor[rgb]{0.000,0.000,0.000}{	env-$>$env\_parent\_id=0;   //}\emph{\textcolor[rgb]{0.000,0.000,0.000}{setting parent's id to zero.}}
+
+
+
+
+\textcolor[rgb]{0.000,0.000,0.000}{	env-$>$env\_type=type;}
+
+
+\textcolor[rgb]{0.000,0.000,0.000}{	load\_icode(env,binary,size); //}\emph{\textcolor[rgb]{0.000,0.000,0.000}{loading the elf binary into the environment.}}
+
+
+
+
+
+\textcolor[rgb]{0.000,0.000,0.000}{(vi) -- env\_run()}
+
+
+\textcolor[rgb]{0.000,0.000,0.000}{\\running given environment in user mode.}
+
+
+
+
+
+\textcolor[rgb]{0.000,0.000,0.000}{	}\textcolor[rgb]{0.000,0.000,0.000}{if(curenv!=e)}
+
+
+\textcolor[rgb]{0.000,0.000,0.000}{	\{}
+
+
+\textcolor[rgb]{0.000,0.000,0.000}{		}\emph{\textcolor[rgb]{0.000,0.000,0.000}{//changing the 'curenv' status to runnable from running if it was already}}
+
+
+\emph{\textcolor[rgb]{0.000,0.000,0.000}{		//in running state.}}
+
+
+
+
+
+\textcolor[rgb]{0.000,0.000,0.000}{		if((curenv!=NULL) \&\& curenv-$>$env\_status==ENV\_RUNNING)}
+
+
+\textcolor[rgb]{0.000,0.000,0.000}{			curenv-$>$env\_status=ENV\_RUNNABLE;}
+
+
+\textcolor[rgb]{0.000,0.000,0.000}{		curenv=e;}
+
+
+\textcolor[rgb]{0.000,0.000,0.000}{		curenv-$>$env\_status=ENV\_RUNNING; }\emph{\textcolor[rgb]{0.000,0.000,0.000}{//setting env\_status to env\_running}}
+
+
+\textcolor[rgb]{0.000,0.000,0.000}{		curenv-$>$env\_runs++; //updating the env\_runs}
+
+
+\textcolor[rgb]{0.000,0.000,0.000}{	           lcr3(PADDR(curenv-$>$env\_pgdir)); //}\emph{\textcolor[rgb]{0.000,0.000,0.000}{switching to the env\_pgdir address space}}
+
+
+\textcolor[rgb]{0.000,0.000,0.000}{	\}}
+
+
+\textcolor[rgb]{0.000,0.000,0.000}{	env\_pop\_tf(\&curenv-$>$env\_tf); //}\emph{\textcolor[rgb]{0.000,0.000,0.000}{popping the current environment's trap frame.}}
+
+
+
+
+
+
+
+
+\textbf{\textcolor[rgb]{0.000,0.000,0.000}{Exercise 3:}}
+
+
+\textcolor[rgb]{0.000,0.000,0.000}{		Reading Part.}
+
+
+
+
+
+\textbf{\textcolor[rgb]{0.000,0.000,0.000}{Exercise 4:}}
+
+
+
+
+
+\textcolor[rgb]{0.000,0.000,0.000}{\_alltraps:}
+
+
+pushl \%ds
+
+
+pushl \%es
+
+
+pushal
+
+
+movl \$GD\_KD, \%eax  //\emph{loading GD\_KD into es and ds}
+
+
+movw \%ax, \%es
+
+
+movw \%ax, \%ds
+
+
+pushl \%esp    //\emph{pushl esp and calling trap}
+
+
+call trap
+
+
+
+
+
+trap\_init() - initialising the idt to point to each of the entries in trapentry.S
+
+
+
+
+
+	int i;
+
+
+	//\emph{initialising the idt}
+
+
+	for (i = 0; i $<$= 48; i++)
+
+
+		SETGATE(idt[i], 0 , GD\_KT, handlers[i], 0);
+
+
+	SETGATE(idt[T\_BRKPT], 0, GD\_KT, handlers[T\_BRKPT], 3); //\emph{for break point test to} 									       //\emph{work}
+
+
+           SETGATE(idt[T\_SYSCALL], 0, GD\_KT, handlers[T\_SYSCALL], 3);//\emph{added for exercise 7}
+
+
+
+
+
+Trap numbers from 8 to 15 generate an error code and others do not.
+
+
+So,for them we push the corresponding number and for others we push zero in place of error code.
+
+
+
+
+
+
+
+
+Exercise 5 \& 6 :
+
+
+
+
+
+trap\_dispatch(): call the appropriate function depending on the trapno in the trapframe.
+
+
+	
+
+
+	int retval = 0;
+
+
+	switch(tf-$>$tf\_trapno)
+
+
+	\{
+
+
+		case T\_PGFLT:  //\emph{pagefault}
+
+
+			page\_fault\_handler(tf);
+
+
+			return;
+
+
+		
+
+
+		case T\_BRKPT: //\emph{break point -- for exercise 6}
+
+
+			monitor(tf); //\emph{monitor function is already implemented .}
+
+
+			return;
+
+
+		
+
+
+		case T\_SYSCALL: //\emph{system call -- for exercise 7}
+
+
+			
+
+
+			retval= syscall(tf-$>$tf\_regs.reg\_eax,tf-$>$tf\_regs.reg\_edx,tf-		$>$tf\_regs.reg\_ecx,tf-$>$tf\_regs.reg\_ebx,tf-$>$tf\_regs.reg\_edi,tf-$>$tf\_regs.reg\_esi);
+
+
+			tf-$>$tf\_regs.reg\_eax = retval;
+
+
+			return;
+
+
+	
+
+
+	
+
+
+	default: //\emph{we do not handle any other trap}
+
+
+		print\_trapframe(tf);
+
+
+		if (tf-$>$tf\_cs == GD\_KT)
+
+
+			panic({``}unhandled trap'');
+
+
+		else \{
+
+
+			env\_destroy(curenv);
+
+
+			return;
+
+
+		\}
+
+
+	\}
+
+
+
+
+
+Exercise 7:
+
+
+
+
+
+sys\_cputs():
+
+
+	char *va;
+
+
+	pte\_t *p;
+
+
+	//\emph{checking whether the user has permissions or not}
+
+
+	for ( va = (char *)s ; va $<$ s + len; va+=PGSIZE)\{
+
+
+		p = pgdir\_walk(curenv-$>$env\_pgdir, (void *)va, 0);
+
+
+		if (p \&\& (*p \& PTE\_U) \&\& (*p \& PTE\_P) )
+
+
+			continue;
+
+
+		env\_destroy(curenv); //\emph{if user dont have necessary permissions we destroy}
+
+
+		return; //\emph{that environment and return ,otherwise print the string(as given )}
+
+
+	\}
+
+
+
+
+
+syscall.c()
+
+
+
+
+
+	int retval = 0;
+
+
+	//\emph{calls the appropriate function based on the syscallno}
+
+
+	switch(syscallno)\{
+
+
+		case SYS\_cputs:
+
+
+
+			user\_mem\_assert(curenv, (void *)a1, a2, PTE\_U | PTE\_P);
+
+
+			//\emph{the above is for checking if the curenv has the required permissions}
+
+
+			//\emph{or not. Asked in Exercise 9.}
+
+
+			sys\_cputs((char *)a1, a2);
+
+
+			retval = a2;
+
+
+			break;
+
+
+		case SYS\_cgetc:
+
+
+			retval = sys\_cgetc();
+
+
+			break;
+
+
+		case SYS\_getenvid:
+
+
+			retval = sys\_getenvid();
+
+
+			break;
+
+
+		case SYS\_env\_destroy:
+
+
+			retval = sys\_env\_destroy(a1);
+
+
+			break;
+
+
+		default:
+
+
+			-E\_INVAL;
+
+
+			\}
+
+
+		return retval;
+
+
+
+
+
+Exercise 8:
+
+
+libmain.c
+
+
+
+
+
+	thisenv = (struct Env *)envs + ENVX(sys\_getenvid());
+
+
+	//\emph{thisenv point to environment's structure in envs array}
+
+
+
+
+
+Exercise 9 \& 10:
+
+
+
+
+
+page\_fault\_handler(): panicking if the page fault occurs in kernel mode.
+
+
+
+
+
+if ((tf-$>$tf\_cs \& 3) != 3)  //\emph{checking the last two bits of tf\_cs}
+
+
+	panic({``}kernel page fault'');
+
+
+
+
+
+user\_mem\_check():
+
+
+
+
+
+	//\emph{checking if the environment has the permission to read [va,va+len) with} 	//\emph{permissions perm | PTE\_P}
+
+
+	uint32\_t  ia;
+
+
+	perm |= PTE\_P;
+
+
+	for (  ia = (uint32\_t)va; ia $<$ (uint32\_t)va + len; ia++)\{
+
+
+		if (ia $>$ ULIM)\{
+
+
+			user\_mem\_check\_addr = ia;
+
+
+			return -E\_FAULT;
+
+
+		\}
+
+
+		pte\_t *p = pgdir\_walk(env-$>$env\_pgdir, (void *)ia, 0);
+
+
+		if (p==NULL)\{
+
+
+			user\_mem\_check\_addr = ia;
+
+
+			return -E\_FAULT;
+
+
+		\}
+
+
+		if ((*p \& perm) != perm)\{
+
+
+			user\_mem\_check\_addr = ia;
+
+
+			return -E\_FAULT;
+
+
+
+		\}
+
+
+	\}
+
+
+	return 0;\\
+
+
+
+
+\textbf{Question 1:}
+
+
+
+
+
+Because, the hardware does not distinguish errors ,for which exception is called.some times we push the error code and some times we do not .if all the exceptions we delivered to the same handler, we lose this feature.
+
+
+
+
+
+\textbf{Question 2:}
+
+
+
+
+
+No, we dont have to do anything to make the code work properly.If the chice is given to the user, then there is a security vulnerability as exceptions are handled with kernel privilages and he can run anything he wants ,which should not happen.It gives int13 because there is a violation in the privilages.
+
+
+
+
+
+\textbf{Question 3:}
+
+
+
+
+
+In trap\_init() we set the dpl to 3 for T\_BRKPT so that user can generate breakpoint trap
+
+
+and it will generate breakpoint trap ,if the dpl is set to 0,user can not generate it himself and it will give general protection fault.
+
+
+
+
+
+\textbf{Question 4:}
+
+
+
+
+
+The mechanisms enforce permissions,they create gate so that user can make system calls through the exceptions.depending on what exceptions we allow for the user to generate(depending on how you set the permissions in trap\_init using SETGATE).This is useful as a protection to not execute the malicious code written by user.
+
+
+
+
+
+\textbf{Exercise 9 -- Question:}
+
+
+Because user process do not have permissions to access the code in lib/libmain.c.
+
+
+\end{document}
