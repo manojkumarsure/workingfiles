@@ -60,7 +60,8 @@ public class GJDepthFirst<R,A> implements GJVisitor<R,A> {
    //
    // User-generated visitor methods below
    //
-
+	StringBuffer s= new StringBuffer();
+	String[] str;
    /**
     * f0 -> "MAIN"
     * f1 -> StmtList()
@@ -70,11 +71,14 @@ public class GJDepthFirst<R,A> implements GJVisitor<R,A> {
     */
    public R visit(Goal n, A argu) {
       R _ret=null;
+      s.append("MAIN\n");
       n.f0.accept(this, argu);
       n.f1.accept(this, argu);
       n.f2.accept(this, argu);
+      s.append("END\n");
       n.f3.accept(this, argu);
       n.f4.accept(this, argu);
+      str=s.toString().split("\n");
       return _ret;
    }
 
@@ -98,7 +102,9 @@ public class GJDepthFirst<R,A> implements GJVisitor<R,A> {
       R _ret=null;
       n.f0.accept(this, argu);
       n.f1.accept(this, argu);
+      s.append("[");
       n.f2.accept(this, argu);
+      s.append("]\n");
       n.f3.accept(this, argu);
       n.f4.accept(this, argu);
       return _ret;
@@ -126,6 +132,7 @@ public class GJDepthFirst<R,A> implements GJVisitor<R,A> {
    public R visit(NoOpStmt n, A argu) {
       R _ret=null;
       n.f0.accept(this, argu);
+      s.append("NOOP\n");
       return _ret;
    }
 
@@ -135,6 +142,7 @@ public class GJDepthFirst<R,A> implements GJVisitor<R,A> {
    public R visit(ErrorStmt n, A argu) {
       R _ret=null;
       n.f0.accept(this, argu);
+      s.append("ERROR\n");
       return _ret;
    }
 
@@ -145,9 +153,11 @@ public class GJDepthFirst<R,A> implements GJVisitor<R,A> {
     */
    public R visit(CJumpStmt n, A argu) {
       R _ret=null;
+      s.append("CJUMP ");
       n.f0.accept(this, argu);
       n.f1.accept(this, argu);
       n.f2.accept(this, argu);
+      s.append("\n");
       return _ret;
    }
 
@@ -157,8 +167,10 @@ public class GJDepthFirst<R,A> implements GJVisitor<R,A> {
     */
    public R visit(JumpStmt n, A argu) {
       R _ret=null;
+      s.append("JUMP ");
       n.f0.accept(this, argu);
       n.f1.accept(this, argu);
+      s.append("\n");
       return _ret;
    }
 
@@ -170,10 +182,12 @@ public class GJDepthFirst<R,A> implements GJVisitor<R,A> {
     */
    public R visit(HStoreStmt n, A argu) {
       R _ret=null;
+      s.append("HSTORE ");
       n.f0.accept(this, argu);
       n.f1.accept(this, argu);
       n.f2.accept(this, argu);
       n.f3.accept(this, argu);
+      s.append("\n");
       return _ret;
    }
 
@@ -185,10 +199,12 @@ public class GJDepthFirst<R,A> implements GJVisitor<R,A> {
     */
    public R visit(HLoadStmt n, A argu) {
       R _ret=null;
+      s.append("HLOAD ");
       n.f0.accept(this, argu);
       n.f1.accept(this, argu);
       n.f2.accept(this, argu);
       n.f3.accept(this, argu);
+      s.append("\n");
       return _ret;
    }
 
@@ -199,9 +215,11 @@ public class GJDepthFirst<R,A> implements GJVisitor<R,A> {
     */
    public R visit(MoveStmt n, A argu) {
       R _ret=null;
+      s.append("MOVE ");
       n.f0.accept(this, argu);
       n.f1.accept(this, argu);
       n.f2.accept(this, argu);
+      s.append("\n");
       return _ret;
    }
 
@@ -211,8 +229,10 @@ public class GJDepthFirst<R,A> implements GJVisitor<R,A> {
     */
    public R visit(PrintStmt n, A argu) {
       R _ret=null;
+      s.append("PRINT ");
       n.f0.accept(this, argu);
       n.f1.accept(this, argu);
+      s.append("\n");
       return _ret;
    }
 
@@ -237,11 +257,14 @@ public class GJDepthFirst<R,A> implements GJVisitor<R,A> {
     */
    public R visit(StmtExp n, A argu) {
       R _ret=null;
+      s.append("BEGIN\n");
       n.f0.accept(this, argu);
       n.f1.accept(this, argu);
       n.f2.accept(this, argu);
+      s.append("RETURN ");
       n.f3.accept(this, argu);
       n.f4.accept(this, argu);
+      s.append("\nEND\n");
       return _ret;
    }
 
@@ -254,11 +277,14 @@ public class GJDepthFirst<R,A> implements GJVisitor<R,A> {
     */
    public R visit(Call n, A argu) {
       R _ret=null;
+      s.append("CALL ");
       n.f0.accept(this, argu);
       n.f1.accept(this, argu);
       n.f2.accept(this, argu);
+      s.append("(");
       n.f3.accept(this, argu);
       n.f4.accept(this, argu);
+      s.append(")");
       return _ret;
    }
 
@@ -268,6 +294,7 @@ public class GJDepthFirst<R,A> implements GJVisitor<R,A> {
     */
    public R visit(HAllocate n, A argu) {
       R _ret=null;
+      s.append("HALLOCATE ");
       n.f0.accept(this, argu);
       n.f1.accept(this, argu);
       return _ret;
@@ -295,6 +322,13 @@ public class GJDepthFirst<R,A> implements GJVisitor<R,A> {
    public R visit(Operator n, A argu) {
       R _ret=null;
       n.f0.accept(this, argu);
+      switch(n.f0.which)
+      {
+		case 0:s.append("LT ");break;
+		case 1:s.append("PLUS ");break;
+		case 2:s.append("MINUS ");break;
+		case 3:s.append("TIMES ");break;
+      }
       return _ret;
    }
 
@@ -315,6 +349,7 @@ public class GJDepthFirst<R,A> implements GJVisitor<R,A> {
     */
    public R visit(Temp n, A argu) {
       R _ret=null;
+      s.append("TEMP ");
       n.f0.accept(this, argu);
       n.f1.accept(this, argu);
       return _ret;
@@ -326,6 +361,7 @@ public class GJDepthFirst<R,A> implements GJVisitor<R,A> {
    public R visit(IntegerLiteral n, A argu) {
       R _ret=null;
       n.f0.accept(this, argu);
+      s.append(n.f0.tokenImage+" ");
       return _ret;
    }
 
@@ -335,6 +371,7 @@ public class GJDepthFirst<R,A> implements GJVisitor<R,A> {
    public R visit(Label n, A argu) {
       R _ret=null;
       n.f0.accept(this, argu);
+      s.append(n.f0.tokenImage+" ");
       return _ret;
    }
 
