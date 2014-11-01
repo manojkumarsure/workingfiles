@@ -1,0 +1,4 @@
+consult(c10).
+consult(cs12b028).
+main([cs1100, cs6843], [[ja], [ja]], [CS1100, CS6843]).
+

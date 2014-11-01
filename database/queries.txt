@@ -1,0 +1,46 @@
+1)Get the Itemid's and their mrp along with their discounts and start and end dates of the discounts
+query :- 
+SELECT i.itemid, i.mrp, o.discount, o.stdate, o.enddate
+FROM Item i, Offer o, ItemOffers io
+WHERE i.itemid = io.itemid
+AND io.offerid = o.offerid
+
+2)Get the total amount associated with each bill(billid) discarding discounts
+query :- 
+SELECT b.`billno.` , SUM( mrp ) 
+FROM Item i, Bill b
+WHERE i.billno = b.`billno.` 
+GROUP BY b.`billno.` 
+
+3)Get the compliant filed by a customer (compliant type) along with the date of filing , date of checked along with his name and the person who verified it(salesmanname).
+query :-
+SELECT c.name AS  `cutomer name` , comp.type AS problem, comp.date AS  `date of filing` , ch.date AS  `checked date` , s.name AS `salesman name` 
+FROM Customer c, compliant comp, checked ch, salesman s
+WHERE c.custid = comp.custid
+AND comp.compid = ch.compid
+AND ch.salsmnid = s.salsmnid
+
+4)Get the supplier name along with total number of items they have supplied.
+query :-
+SELECT s.name, COUNT( i.itemid ) as `total items supplied`
+FROM Item i, Supplier s
+WHERE i.supplierid = s.supplierid
+GROUP BY s.supplierid
+
+5)Get the month and year in which the supermarket has maximum business.
+query :-
+
+create view `monthly business` as
+SELECT YEAR( b.date ) AS YEAR, MONTH( b.date ) AS 
+MONTH , SUM( i.mrp ) as business
+FROM Item i, Bill b
+WHERE i.billno = b.`billno.` 
+GROUP BY YEAR( b.date ) , MONTH( b.date ) 
+
+SELECT YEAR, 
+MONTH FROM  `monthly business` 
+WHERE business
+IN (
+SELECT MAX( business ) 
+FROM  `monthly business`
+)

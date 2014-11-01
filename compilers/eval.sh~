@@ -1,13 +1,19 @@
 cd Assignment4
 javac P4.java
 cd ..
+cd Assignment3
+javac P3.java
+cd ..
+cd Assignment5
+javac P5.java
+cd ..
 count=0
 totalcount=0
 for i in examples/*.java;
 do
 #echo $i;
-    java -classpath Assignment3 P3 < $i | java -classpath Assignment4 P4 > tempfile;
-    java -jar Interpreter/pgi.jar < tempfile > tmpoutput;
+    java -classpath Assignment3 P3 < $i | java -classpath Assignment4 P4 |java -classpath Assignment5 P5 > tempfile;
+    java -jar Assignment5/kgi.jar < tempfile > tmpoutput;
     cd examples/;
        totalcount=$((totalcount+1))
 	j=`echo $i | sed 's/\([^\/]*\/\)\(.*\)/\2/'`;
@@ -21,16 +27,9 @@ do
         then
         echo "Successful"
         count=$((count+1))
-        java -classpath microIR Main < tempfile > tmpoutput;
-        diff tmpoutput parsed;
-        if [ $? -ne 0 ]
-	        then
-    			echo "Failed Parsing ------------- $class -------------------"
-    		fi
-        else
-        echo "Failed --------------------- $class -------------------"
     fi
-    java -classpath parser parser < tempfile;
-    rm tmpoutput tmpoutput2 tempfile;
+    #rm tmpoutput tmpoutput2 tempfile;
 done
+echo $count
+echo $totalcount
 rm examples/*.class
